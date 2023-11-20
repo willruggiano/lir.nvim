@@ -1,6 +1,5 @@
 local has_devicons, Devicons = pcall(require, "nvim-web-devicons")
 local utils = require("lir.utils")
--- local config = 'lir.config'
 
 local vim = vim
 local a = vim.api
@@ -10,7 +9,6 @@ local a = vim.api
 -----------------------------
 local ns = a.nvim_create_namespace("lir_devicons")
 local FOLDER_ICON_NAME = "lir_folder_icon"
-local ICON_WIDTH = 0
 
 -----------------------------
 -- Export
@@ -36,9 +34,6 @@ function devicons.setup()
       },
     })
   end
-
-  local icon = Devicons.get_icon("default_icon", "", { default = true })
-  ICON_WIDTH = vim.fn.strlen(icon)
 end
 
 ---@param filename string
@@ -53,10 +48,9 @@ end
 
 ---@param files lir_item[]
 function devicons.update_highlight(files)
-  local col_start, col_end = #" ", ICON_WIDTH + #" "
-
   a.nvim_buf_clear_namespace(0, ns, 0, -1)
   for i, file in ipairs(files) do
+    local col_start, col_end = 0, vim.fn.strlen(file.devicons.icon) + #" "
     a.nvim_buf_add_highlight(0, ns, file.devicons.highlight_name, i - 1, col_start, col_end)
   end
 end
